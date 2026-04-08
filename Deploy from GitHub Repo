@@ -1,1 +1,5 @@
-Deploy from GitHub Repo
+npm install -g @railway/cli
+railway login
+cd C:\Users\sarka\Downloads\eden-garden-COMPLETE
+railway init
+railway up

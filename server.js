@@ -10,12 +10,20 @@
 
 require("dotenv").config();
 const express    = require("express");
-const stripe     = require("stripe")(process.env.STRIPE_SECRET_KEY);
+let stripe;
+try {
+  stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+  console.log("✅ Stripe initialized");
+} catch(e) {
+  console.error("❌ Stripe init failed:", e.message);
+  stripe = null;
+}
+
 const path       = require("path");
 const cors       = require("cors");
 
 const app  = express();
-const PORT = process.env.PORT || 4242;
+const PORT = process.env.PORT || 3000;
 
 // ── Middleware ──────────────────────────────────────────────
 app.use(cors({
@@ -75,6 +83,9 @@ const PRODUCTS = {
 
 app.post("/create-checkout-session", async (req, res) => {
   try {
+    if (!stripe) {
+      return res.status(500).json({ error: "Stripe not configured. Check STRIPE_SECRET_KEY." });
+    }
     const { type } = req.body;
 
     // Validate product type
@@ -138,7 +149,11 @@ app.post("/create-checkout-session", async (req, res) => {
 // ── RETRIEVE SESSION (for success page) ─────────────────────
 app.get("/session-details", async (req, res) => {
   try {
+    if (!stripe) {
+      return res.status(500).json({ error: "Stripe not configured." });
+    }
     const { session_id } = req.query;
+
     if (!session_id) return res.status(400).json({ error: "Missing session_id" });
 
     const session = await stripe.checkout.sessions.retrieve(session_id);

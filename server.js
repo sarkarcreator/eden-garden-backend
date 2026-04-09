@@ -19,9 +19,8 @@ const PORT = process.env.PORT || 4242;
 
 // ── Middleware ──────────────────────────────────────────────
 app.use(cors({
-  origin: ['https://egardenp.com', 'http://localhost:4242'],
+  origin: '*',
   methods: ['GET', 'POST'],
-  credentials: true
 }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));   // serves HTML files

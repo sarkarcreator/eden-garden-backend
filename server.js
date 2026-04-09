@@ -203,10 +203,8 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log("");
   console.log("╔══════════════════════════════════════════════════╗");
   console.log("║   Eden Garden Properties — Payment Server        ║");
-  console.log(`║   Running on: http://localhost:${PORT}                ║`);
+  console.log(`║   Running on: http://0.0.0.0:${PORT}                ║`);
   console.log("╚══════════════════════════════════════════════════╝");
   console.log("");
-  console.log("  Open: http://localhost:" + PORT);
-  console.log("  Test card: 4242 4242 4242 4242");
-  console.log("");
 });
+

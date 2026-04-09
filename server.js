@@ -214,11 +214,15 @@ app.post(
 
 
 // ── START SERVER ─────────────────────────────────────────────
+const PORT = process.env.PORT;
+
+// ...
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log("");
   console.log("╔══════════════════════════════════════════════════╗");
   console.log("║   Eden Garden Properties — Payment Server        ║");
-  console.log(`║   Running on: http://0.0.0.0:${PORT}           ║`);
+  console.log(`║   Running on: http://0.0.0.0:${PORT}                ║`);
   console.log("╚══════════════════════════════════════════════════╝");
   console.log("");
 });

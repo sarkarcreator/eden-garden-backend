@@ -98,7 +98,7 @@ app.post("/create-checkout-session", async (req, res) => {
     const product = PRODUCTS[type];
 
     // Build absolute success/cancel URLs
-    const BASE_URL = process.env.BASE_URL || `http://egardenp.com:${PORT}`;
+    const BASE_URL = process.env.BASE_URL || `https://eden-garden-backend-production.up.railway.app/:${PORT}`;
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],

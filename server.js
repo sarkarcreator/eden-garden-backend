@@ -24,7 +24,6 @@ const cors       = require("cors");
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
-});
 
 // ── Middleware ──────────────────────────────────────────────
 app.use(cors({
@@ -99,7 +98,7 @@ app.post("/create-checkout-session", async (req, res) => {
     const product = PRODUCTS[type];
 
     // Build absolute success/cancel URLs
-    const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
+    const BASE_URL = process.env.BASE_URL || `http://egardenp.com:${PORT}`;
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],

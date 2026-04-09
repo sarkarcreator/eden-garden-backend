@@ -9,7 +9,6 @@ try {
   console.log("Stripe initialized");
 } catch(e) {
   console.error("Stripe init failed:", e.message);
-  stripe = null;
 }
 
 const app = express();
@@ -18,7 +17,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/health", (req, res) => res.json({ status: "ok" }));
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", time: new Date().toISOString() });
+});
 
 const PRODUCTS = {
   visit: { name: "Schedule a Property Visit", amount: 50000, currency: "usd" },
@@ -36,7 +37,14 @@ app.post("/create-checkout-session", async (req, res) => {
     const BASE_URL = process.env.BASE_URL || "https://egardenp.com";
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      line_items: [{ price_data: { currency: product.currency, unit_amount: product.amount, product_data: { name: product.name } }, quantity: 1 }],
+      line_items: [{
+        price_data: {
+          currency: product.currency,
+          unit_amount: product.amount,
+          product_data: { name: product.name }
+        },
+        quantity: 1
+      }],
       mode: "payment",
       success_url: BASE_URL + "/success.html?session_id={CHECKOUT_SESSION_ID}",
       cancel_url: BASE_URL + "/cancel.html",
@@ -63,12 +71,21 @@ app.get("/session-details", async (req, res) => {
   }
 });
 
-const server = app.listen(process.env.PORT || 3000, "0.0.0.0", () => {
-  console.log("Server running on port " + server.address().port);
+const PORT = process.env.PORT || 3000;
+const server = app.listen(PORT, "0.0.0.0", () => {
+  console.log("Server running on port " + PORT);
 });
 
 process.on("SIGTERM", () => {
-  console.log("SIGTERM received. Shutting down gracefully.");
+  console.log("SIGTERM received. Shutting down.");
+  server.close(() => {
+    console.log("Server closed.");
+    process.exit(0);
+  });
+});
+
+process.on("SIGINT", () => {
+  console.log("SIGINT received. Shutting down.");
   server.close(() => {
     console.log("Server closed.");
     process.exit(0);

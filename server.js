@@ -20,8 +20,10 @@ const PORT = process.env.PORT || 4242;
 // ── Middleware ──────────────────────────────────────────────
 app.use(cors({
   origin: '*',
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type']
 }));
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));   // serves HTML files
 

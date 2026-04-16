@@ -23,10 +23,10 @@ app.get("/health", (req, res) => {
 });
 
 const PRODUCTS = {
-  visit: { name: "Schedule a Property Visit", amount: 50000, currency: "usd" },
-  holiday_day: { name: "Holiday Home - Daily Stay", amount: 100000, currency: "usd" },
-  holiday_week: { name: "Holiday Home - 1 Week Stay", amount: 280000, currency: "usd" },
-  holiday_month: { name: "Holiday Home - Monthly Stay", amount: 600000, currency: "usd" },
+  visit: { name: "Schedule a Property Visit", amount: 50000, currency: "aed" },
+  holiday_day: { name: "Holiday Home - Daily Stay", amount: 100000, currency: "aed" },
+  holiday_week: { name: "Holiday Home - 1 Week Stay", amount: 280000, currency: "aed" },
+  holiday_month: { name: "Holiday Home - Monthly Stay", amount: 600000, currency: "aed" },
 };
 
 

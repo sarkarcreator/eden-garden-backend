@@ -4,5 +4,5 @@ cd C:\Users\sarka\Downloads\eden-garden-COMPLETE
 railway init
 railway up
 git add .
-git commit -m "added axios dependency"
+git commit -m "added axios for PayPal"
 git push

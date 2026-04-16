@@ -175,7 +175,7 @@ app.get("/session-details", async (req, res) => {
 
 
 
-// ================= SERVER =================
+// ================= SERVER ================
 
 const PORT = process.env.PORT || 3000;
 

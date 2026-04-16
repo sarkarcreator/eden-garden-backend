@@ -117,7 +117,7 @@ app.post("/create-paypal-order", async (req, res) => {
         purchase_units: [
           {
             amount: {
-              currency_code: product.currency.toUpperCase(),
+              currency_code: "AED",
               value: (product.amount / 100).toFixed(2),
               currency_code: "AED",
             },

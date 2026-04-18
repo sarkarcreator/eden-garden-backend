@@ -75,10 +75,9 @@ app.post("/create-checkout-session", async (req, res) => {
 
 // ================= PAYPAL =================
 
-// 🔑 Get Access Token
 async function getPayPalToken() {
   const response = await axios({
-url: "https://api-m.paypal.com/v1/oauth2/token",
+    url: "https://api-m.paypal.com/v1/oauth2/token",
     method: "post",
     auth: {
       username: process.env.PAYPAL_CLIENT_ID,
@@ -89,30 +88,23 @@ url: "https://api-m.paypal.com/v1/oauth2/token",
     },
     data: "grant_type=client_credentials",
   });
-
   return response.data.access_token;
 }
 
-// 🛒 Create PayPal Order
 app.post("/create-paypal-order", async (req, res) => {
   try {
     const { type } = req.body;
-
     if (!type || !PRODUCTS[type]) {
       return res.status(400).json({ error: "Invalid type" });
     }
-
     const product = PRODUCTS[type];
     const accessToken = await getPayPalToken();
-
-    // AED to USD conversion (1 AED ≈ 0.2723 USD)
     const amountUSD = ((product.amount / 100) * 0.2723).toFixed(2);
-
     const response = await axios({
-      url: "https://api-m.sandbox.paypal.com/v2/checkout/orders",
+      url: "https://api-m.paypal.com/v2/checkout/orders",
       method: "post",
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: "Bearer " + accessToken,
         "Content-Type": "application/json",
       },
       data: {
@@ -123,30 +115,27 @@ app.post("/create-paypal-order", async (req, res) => {
               currency_code: "USD",
               value: amountUSD,
             },
-            description: product.name + " (AED " + (product.amount / 100). ],
+            description: product.name + " (AED " + (product.amount / 100) + ")",
+          },
+        ],
       },
     });
-
     res.json(response.data);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-
-// 💰 Capture PayPal Payment
 app.post("/capture-paypal-order/:orderID", async (req, res) => {
   try {
     const accessToken = await getPayPalToken();
-
     const response = await axios({
-      url: `https://api-m.paypal.com/v2/checkout/orders/${req.params.orderID}/capture`,
+      url: "https://api-m.paypal.com/v2/checkout/orders/" + req.params.orderID + "/capture",
       method: "post",
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: "Bearer " + accessToken,
       },
     });
-
     res.json(response.data);
   } catch (err) {
     res.status(500).json({ error: err.message });

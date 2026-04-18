@@ -77,7 +77,7 @@ app.post("/create-checkout-session", async (req, res) => {
 
 async function getPayPalToken() {
   const response = await axios({
-    url: "https://api-m.paypal.com/v1/oauth2/token",
+url: "https://api-m.sandbox.paypal.com/v1/oauth2/token",
     method: "post",
     auth: {
       username: process.env.PAYPAL_CLIENT_ID,
@@ -101,7 +101,7 @@ app.post("/create-paypal-order", async (req, res) => {
     const accessToken = await getPayPalToken();
     const amountUSD = ((product.amount / 100) * 0.2723).toFixed(2);
     const response = await axios({
-      url: "https://api-m.paypal.com/v2/checkout/orders",
+url: "https://api-m.sandbox.paypal.com/v2/checkout/orders",
       method: "post",
       headers: {
         Authorization: "Bearer " + accessToken,
@@ -130,7 +130,7 @@ app.post("/capture-paypal-order/:orderID", async (req, res) => {
   try {
     const accessToken = await getPayPalToken();
     const response = await axios({
-      url: "https://api-m.paypal.com/v2/checkout/orders/" + req.params.orderID + "/capture",
+url: "https://api-m.sandbox.paypal.com/v2/checkout/orders/" + req.params.orderID + "/capture",
       method: "post",
       headers: {
         Authorization: "Bearer " + accessToken,

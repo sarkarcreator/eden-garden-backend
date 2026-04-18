@@ -78,7 +78,7 @@ app.post("/create-checkout-session", async (req, res) => {
 // 🔑 Get Access Token
 async function getPayPalToken() {
   const response = await axios({
-    url: "https://api-m.sandbox.paypal.com/v1/oauth2/token",
+url: "https://api-m.paypal.com/v1/oauth2/token",
     method: "post",
     auth: {
       username: process.env.PAYPAL_CLIENT_ID,
@@ -105,6 +105,9 @@ app.post("/create-paypal-order", async (req, res) => {
     const product = PRODUCTS[type];
     const accessToken = await getPayPalToken();
 
+    // AED to USD conversion (1 AED ≈ 0.2723 USD)
+    const amountUSD = ((product.amount / 100) * 0.2723).toFixed(2);
+
     const response = await axios({
       url: "https://api-m.sandbox.paypal.com/v2/checkout/orders",
       method: "post",
@@ -117,13 +120,10 @@ app.post("/create-paypal-order", async (req, res) => {
         purchase_units: [
           {
             amount: {
-              currency_code: "AED",
-              value: (product.amount / 100).toFixed(2),
-              currency_code: "AED",
+              currency_code: "USD",
+              value: amountUSD,
             },
-            description: product.name,
-          },
-        ],
+            description: product.name + " (AED " + (product.amount / 100). ],
       },
     });
 
@@ -133,13 +133,14 @@ app.post("/create-paypal-order", async (req, res) => {
   }
 });
 
+
 // 💰 Capture PayPal Payment
 app.post("/capture-paypal-order/:orderID", async (req, res) => {
   try {
     const accessToken = await getPayPalToken();
 
     const response = await axios({
-      url: `https://api-m.sandbox.paypal.com/v2/checkout/orders/${req.params.orderID}/capture`,
+      url: `https://api-m.paypal.com/v2/checkout/orders/${req.params.orderID}/capture`,
       method: "post",
       headers: {
         Authorization: `Bearer ${accessToken}`,
